@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
+
 from django_facebook import admin_actions
 from django_facebook import models
 from django_facebook import settings as facebook_settings
@@ -25,6 +27,7 @@ class FacebookProfileAdmin(admin.ModelAdmin):
 
     search_fields = ('facebook_name', 'facebook_id',)
 
+    @mark_safe
     def image_(self, instance):
         return """<span style="
         background-image: url({0});
@@ -38,9 +41,9 @@ class FacebookProfileAdmin(admin.ModelAdmin):
     "></span>""".format(
             instance.image.url if (instance and instance.image) else ''
         )
-    image_.allow_tags = True
 
 
+@mark_safe
 def facebook_profile(open_graph_share):
     '''
     Nicely displayed version of the facebook user
@@ -54,7 +57,6 @@ def facebook_profile(open_graph_share):
         facebook_url, facebook_id, facebook_id)
     return link
 
-facebook_profile.allow_tags = True
 facebook_profile.short_description = 'Profile'
 
 
@@ -65,13 +67,13 @@ class OpenGraphShareAdmin(admin.ModelAdmin):
     actions = [admin_actions.retry_open_graph_share,
                admin_actions.retry_open_graph_share_for_user]
 
+    @mark_safe
     def view_share(self, instance):
         share_id = instance.share_id
         url_format = 'https://developers.facebook.com/tools/explorer/%s/?method=GET&path=%s%%2F'
         url = url_format % (facebook_settings.FACEBOOK_APP_ID, share_id)
         template = '<a href="%s">%s</a>' % (url, share_id)
         return template
-    view_share.allow_tags = True
 
 
 if getattr(settings, 'AUTH_PROFILE_MODULE', None) == 'django_facebook.FacebookProfile':

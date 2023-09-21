@@ -6,7 +6,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 from django.contrib.auth import logout
-from django.utils import six
+from six import PY2
 
 from open_facebook.api import FacebookAuthorization, OpenFacebook
 
@@ -76,7 +76,7 @@ class FacebookCanvasMiddleWare(object):
             parsed_signed_request = FacebookAuthorization.parse_signed_data(
                 signed_request)
             access_token = parsed_signed_request['oauth_token']
-            if six.PY2:
+            if PY2:
                 facebook_id = long(parsed_signed_request['user_id'])
             else:
                 facebook_id = int(parsed_signed_request['user_id'])
@@ -90,10 +90,10 @@ class FacebookCanvasMiddleWare(object):
         except MissingPermissionsError:
             return redirect_login_oauth
         # check if user authenticated and if it's the same
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             self.check_django_facebook_user(request, facebook_id, access_token)
         request.facebook = graph
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             _action, _user = connect_user(request, access_token, graph)
         # override http method, since this actually is a GET
         if request.method == 'POST':

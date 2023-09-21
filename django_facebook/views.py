@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django_facebook import exceptions as facebook_exceptions, \
@@ -68,7 +68,7 @@ def _connect(request, graph):
     if graph:
         logger.info('found a graph object')
         converter = get_instance_for('user_conversion', graph)
-        authenticated = converter.is_authenticated()
+        authenticated = converter.is_authenticated
         # Defensive programming :)
         if not authenticated:
             raise ValueError('didnt expect this flow')

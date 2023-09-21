@@ -80,10 +80,12 @@ understand the required functionality
 
 
 '''
+import urllib
 
 from django.http import QueryDict
-from django.utils import six
+from six import integer_types
 from django.utils.http import urlencode
+
 from django_facebook import settings as facebook_settings
 from open_facebook import exceptions as facebook_exceptions
 from open_facebook.utils import json, encode_params, send_warning, memoized, \
@@ -108,7 +110,7 @@ logger = logging.getLogger(__name__)
 
 
 # base timeout, actual timeout will increase when requests fail
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 60
 # two retries was too little, sometimes facebook is a bit flaky
 REQUEST_ATTEMPTS = 3
 
@@ -179,12 +181,16 @@ class FacebookConnection(object):
             extended_timeout = timeout * timeout_mp
             response_file = None
             encoded_params = encode_params(post_data) if post_data else None
-            post_string = (urlencode(encoded_params)
-                           if post_data else None)
+            # old
+            # post_string = (urlencode(encoded_params) if post_data else None)
+            # fixed
+            post_string = urllib.parse.urlencode(post_data).encode("utf-8") if post_data else None
             try:
                 start_statsd('facebook.%s' % statsd_path)
 
                 try:
+                    # prn(url)
+                    # prn(post_string)
                     response_file = opener.open(
                         url, post_string, timeout=extended_timeout)
                     response = response_file.read().decode('utf8')
@@ -370,7 +376,7 @@ class FacebookConnection(object):
                     if error_code and start <= error_code <= stop:
                         matching_error_class = class_
                         logger.info('Matched error on code %s', code)
-                elif isinstance(code, (int, six.integer_types)):
+                elif isinstance(code, (int, integer_types)):
                     if int(code) == error_code:
                         matching_error_class = class_
                         logger.info('Matched error on code %s', code)
@@ -771,6 +777,9 @@ class OpenFacebook(FacebookConnection):
         params['method'] = 'post'
 
         params['version'] = version
+        # prn(path)
+        # prn(post_data)
+        # prn(params)
         response = self.request(path, post_data=post_data, **params)
         return response
 

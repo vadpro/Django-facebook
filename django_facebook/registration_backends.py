@@ -109,7 +109,7 @@ class FacebookRegistrationBackend(NooptRegistrationBackend):
         user = authenticate(**authentication_details)
         login(request, user)
 
-        if user is None or not user.is_authenticated():
+        if user is None or not user.is_authenticated:
             backends = get_backends()
             msg_format = 'Authentication using backends %s and data %s failed'
             raise ValueError(msg_format % (backends, authentication_details))

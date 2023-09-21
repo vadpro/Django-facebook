@@ -4,7 +4,7 @@ import sys
 import functools
 import json
 
-from django.utils import six
+from six import string_types
 try:
     unicode = unicode
 except NameError:
@@ -83,7 +83,7 @@ def smart_str(s, encoding='utf-8', strings_only=False, errors='strict'):
     import types
     if strings_only and isinstance(s, (types.NoneType, int)):
         return s
-    elif not isinstance(s, six.string_types):
+    elif not isinstance(s, string_types):
         try:
             return str(s)
         except UnicodeEncodeError:
@@ -107,7 +107,7 @@ def send_warning(message, request=None, e=None, **extra_data):
     Uses the logging system to send a message to logging and sentry
     '''
     username = None
-    if request and request.user.is_authenticated():
+    if request and request.user.is_authenticated:
         username = request.user.username
 
     error_message = None

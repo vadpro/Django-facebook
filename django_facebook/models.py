@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+
+from django.utils import timezone
 from django.conf import settings
 try:
     from django.contrib.contenttypes.fields import GenericForeignKey
@@ -112,7 +113,6 @@ class FACEBOOK_OG_STATE:
         pass
 
 
-@python_2_unicode_compatible
 class BaseFacebookModel(models.Model):
 
     '''
@@ -134,7 +134,7 @@ class BaseFacebookModel(models.Model):
     raw_data = models.TextField(blank=True, null=True)
 
     # the field which controls if we are sharing to facebook
-    facebook_open_graph = models.NullBooleanField(
+    facebook_open_graph = models.BooleanField(null=True,
         help_text='Determines if this user want to share via open graph')
 
     # set to true if we require a new access token
@@ -312,7 +312,6 @@ class FacebookModel(BaseFacebookModel):
 FacebookProfileModel = FacebookModel
 
 
-@python_2_unicode_compatible
 class FacebookUser(models.Model):
 
     '''
@@ -400,7 +399,6 @@ class BaseModelMetaclass(ModelBase):
         return super_new
 
 
-@python_2_unicode_compatible
 class BaseModel(models.Model):
 
     '''
@@ -426,7 +424,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-@python_2_unicode_compatible
 class CreatedAtAbstractBase(BaseModel):
 
     '''
@@ -551,7 +548,7 @@ class OpenGraphShare(BaseModel):
     def send(self, graph=None, shared_explicitly=False):
         result = None
         # update the last attempt
-        self.last_attempt = datetime.now()
+        self.last_attempt = timezone.now()
         self.save()
 
         # see if the graph is enabled
@@ -577,7 +574,7 @@ class OpenGraphShare(BaseModel):
                     raise OpenFacebookException(error_message)
                 self.share_id = share_id
                 self.error_message = None
-                self.completed_at = datetime.now()
+                self.completed_at = timezone.now()
                 self.save()
             except OpenFacebookException as e:
                 logging.warn(
@@ -660,7 +657,7 @@ class OpenGraphShare(BaseModel):
         response = None
         if graph:
             response = graph.delete(self.share_id)
-            self.removed_at = datetime.now()
+            self.removed_at = timezone.now()
             self.save()
         return response
 

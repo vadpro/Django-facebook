@@ -50,7 +50,7 @@ def connect_user(request, access_token=None, facebook_graph=None, connect_facebo
 
     converter = get_instance_for('user_conversion', graph)
 
-    assert converter.is_authenticated()
+    assert converter.is_authenticated
     facebook_data = converter.facebook_profile_data()
     force_registration = request.POST.get('force_registration') or \
         request.GET.get('force_registration') or \
@@ -58,7 +58,7 @@ def connect_user(request, access_token=None, facebook_graph=None, connect_facebo
         request.GET.get('force_registration_hard')
 
     logger.debug('force registration is set to %s', force_registration)
-    if connect_facebook and request.user.is_authenticated() and not force_registration:
+    if connect_facebook and request.user.is_authenticated and not force_registration:
         # we should only allow connect if users indicate they really want to connect
         # only when the request.CONNECT_FACEBOOK = 1
         # if this isn't present we just do a login
@@ -129,10 +129,10 @@ def _connect_user(request, facebook, overwrite=True):
     Update the fields on the user model and connects it to the facebook account
 
     '''
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         raise ValueError(
             'Connect user can only be used on authenticated users')
-    if not facebook.is_authenticated():
+    if not facebook.is_authenticated:
         raise ValueError(
             'Facebook needs to be authenticated for connect flows')
 
@@ -203,7 +203,7 @@ def _register_user(request, facebook, profile_callback=None,
     if remove_old_connections = True we will disconnect old
     profiles from their facebook flow
     '''
-    if not facebook.is_authenticated():
+    if not facebook.is_authenticated:
         raise ValueError(
             'Facebook needs to be authenticated for connect flows')
 

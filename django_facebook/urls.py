@@ -1,39 +1,40 @@
-from django.conf.urls import url
 from django.conf import settings
 
 # help autodiscovery a bit
+from django.urls import re_path
+
 from django_facebook import admin
 from .views import connect, disconnect, example
 from .example_views import *
 
 urlpatterns = [
-    url(r'^connect/$', connect, name='facebook_connect'),
-    url(r'^disconnect/$',
+    re_path(r'^connect/$', connect, name='facebook_connect'),
+    re_path(r'^disconnect/$',
         disconnect, name='facebook_disconnect'),
-    url(r'^example/$', example, name='facebook_example'),
+    re_path(r'^example/$', example, name='facebook_example'),
 ]
 
 dev_patterns = [
-    url(
+    re_path(
         r'^lazy_decorator_example/$', lazy_decorator_example,
         name='facebook_lazy_decorator_example'),
-    url(r'^decorator_example/$', decorator_example,
+    re_path(r'^decorator_example/$', decorator_example,
         name='facebook_decorator_example'),
-    url(
+    re_path(
         r'^decorator_example_scope/$', decorator_example_scope,
         name='facebook_decorator_example_scope'),
-    url(r'^wall_post/$',
+    re_path(r'^wall_post/$',
         wall_post, name='facebook_wall_post'),
-    url(r'^checkins/$',
+    re_path(r'^checkins/$',
         checkins, name='facebook_checkins'),
-    url(r'^image_upload/$',
+    re_path(r'^image_upload/$',
         image_upload, name='facebook_image_upload'),
-    url(r'^canvas/$', canvas, name='facebook_canvas'),
-    url(r'^page_tab/$',
+    re_path(r'^canvas/$', canvas, name='facebook_canvas'),
+    re_path(r'^page_tab/$',
         page_tab, name='facebook_page_tab'),
-    url(r'^open_graph_beta/$', open_graph_beta,
+    re_path(r'^open_graph_beta/$', open_graph_beta,
         name='facebook_open_graph_beta'),
-    url(r'^remove_og_share/$', remove_og_share,
+    re_path(r'^remove_og_share/$', remove_og_share,
         name='facebook_remove_og_share'),
 ]
 

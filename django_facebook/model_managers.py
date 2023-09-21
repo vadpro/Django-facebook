@@ -4,6 +4,8 @@ from django.db import models
 import operator
 import random
 from datetime import timedelta
+
+from django.utils import timezone
 from django_facebook.utils import compatible_datetime as datetime
 from django.contrib.contenttypes.models import ContentType
 import logging
@@ -72,7 +74,7 @@ class OpenGraphShareManager(models.Manager):
 
     def recently_failed(self):
         from django_facebook import settings as facebook_settings
-        now = datetime.now()
+        now = timezone.now()
         recent_delta = timedelta(
             days=facebook_settings.FACEBOOK_OG_SHARE_RETRY_DAYS)
         recent = now - recent_delta

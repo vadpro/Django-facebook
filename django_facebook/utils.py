@@ -1,4 +1,4 @@
-from django.utils import six
+from six import string_types
 from functools import wraps
 try:
     # using compatible_datetime instead of datetime only
@@ -188,7 +188,7 @@ def clear_persistent_graph_cache(request):
     '''
     request.facebook = None
     request.session.delete('graph')
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         profile = get_profile(request.user)
         profile.clear_access_token()
 
@@ -434,7 +434,7 @@ def parse_scope(scope):
     ['email','user_about_me']
     '''
     assert scope, 'scope is required'
-    if isinstance(scope, six.string_types):
+    if isinstance(scope, string_types):
         scope_list = scope.split(',')
     elif isinstance(scope, (list, tuple)):
         scope_list = list(scope)
@@ -472,8 +472,6 @@ def simplify_class_decorator(class_decorator):
     # function FacebookRequired instead of outer
     @wraps(class_decorator)
     def outer(fn=None, *decorator_args, **decorator_kwargs):
-        # wraps isn't needed, the decorator should do the wrapping :)
-        # @wraps(fn, assigned=available_attrs(fn))
         def actual_decorator(fn):
             instance = class_decorator(fn, *decorator_args, **decorator_kwargs)
             _wrapped_view = instance.__call__()
@@ -504,7 +502,7 @@ def to_int(input, default=0, exception=(ValueError, TypeError), regexp=None):
     '''
     if regexp is True:
         regexp = re.compile('(\d+)')
-    elif isinstance(regexp, six.string_types):
+    elif isinstance(regexp, string_types):
         regexp = re.compile(regexp)
     elif hasattr(regexp, 'search'):
         pass
@@ -654,7 +652,7 @@ def get_class_for(purpose):
     '''
     mapping = get_class_mapping()
     class_ = mapping[purpose]
-    if isinstance(class_, six.string_types):
+    if isinstance(class_, string_types):
         class_ = get_class_from_string(class_)
     return class_
 

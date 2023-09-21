@@ -1,3 +1,5 @@
+venv
+
 # Project specific
 media/js/cache/
 media/css/cache/

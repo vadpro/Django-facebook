@@ -24,7 +24,7 @@ Django-facebook ships with a few signals that you can use to easily accommodate 
     from django_facebook.utils import get_user_model
 
     def pre_facebook_update(sender, user, profile, facebook_data, **kwargs):
-        profile.facebook_information_updated = datetime.datetime.now()
+        profile.facebook_information_updated = timezone.now()
         # Manipulate facebook_data here
 
     signals.facebook_pre_update.connect(pre_facebook_update, sender=get_user_model())
