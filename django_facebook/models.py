@@ -507,7 +507,7 @@ class OpenGraphShare(BaseModel):
     '''
     objects = model_managers.OpenGraphShareManager()
 
-    user = models.ForeignKey(get_user_model_setting())
+    user = models.ForeignKey(get_user_model_setting(), on_delete=models.CASCADE)
 
     # domain stores
     action_domain = models.CharField(max_length=255)
