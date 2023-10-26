@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
 from django_facebook import admin_actions
