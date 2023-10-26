@@ -516,7 +516,7 @@ class OpenGraphShare(BaseModel):
     # what we are sharing, dict and object
     share_dict = models.TextField(blank=True, null=True)
 
-    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True)
     object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
 
